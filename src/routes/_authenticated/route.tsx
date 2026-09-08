@@ -22,6 +22,8 @@ import {
   ClipboardList,
   Building2,
   KanbanSquare,
+  FileSignature,
+
 
 
 } from "lucide-react";
@@ -77,7 +79,9 @@ const navSections = [
     items: [
       { to: "/companies", label: "Perusahaan", icon: Building2 },
       { to: "/pipeline", label: "Pipeline", icon: KanbanSquare },
+      { to: "/mous", label: "MoU", icon: FileSignature },
     ] as const,
+
   },
   {
     label: "ORGANISASI",
