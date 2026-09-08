@@ -105,10 +105,10 @@ export function TransactionFormDialog({
   const amountNumber = Number(amount.replace(/\D/g, "")) || 0;
 
   async function save() {
-    if (!description.trim()) return toast.error("Deskripsi wajib diisi");
-    if (!category) return toast.error("Kategori wajib dipilih");
-    if (amountNumber <= 0) return toast.error("Jumlah harus lebih dari 0");
-    if (linkKind !== "none" && !linkId) return toast.error("Pilih item terkait");
+    if (!description.trim()) { toast.error("Deskripsi wajib diisi"); return; }
+    if (!category) { toast.error("Kategori wajib dipilih"); return; }
+    if (amountNumber <= 0) { toast.error("Jumlah harus lebih dari 0"); return; }
+    if (linkKind !== "none" && !linkId) { toast.error("Pilih item terkait"); return; }
     setSaving(true);
     try {
       let path = proofPath;

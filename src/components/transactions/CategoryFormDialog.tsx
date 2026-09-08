@@ -48,8 +48,8 @@ export function CategoryFormDialog({
   }, [open, category, nextOrder]);
 
   async function save() {
-    if (!name.trim()) return toast.error("Nama kategori wajib diisi");
-    if (!/^#[0-9a-fA-F]{6}$/.test(color)) return toast.error("Format warna harus hex, contoh #16a34a");
+    if (!name.trim()) { toast.error("Nama kategori wajib diisi"); return; }
+    if (!/^#[0-9a-fA-F]{6}$/.test(color)) { toast.error("Format warna harus hex, contoh #16a34a"); return; }
     setSaving(true);
     try {
       const input = {

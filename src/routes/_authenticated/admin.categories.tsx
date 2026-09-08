@@ -126,7 +126,7 @@ function CategoriesPage() {
               <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Belum ada kategori.</td></tr>
             )}
             {categories.map((c) => {
-              const meta = CATEGORY_TYPE_META[c.type] ?? CATEGORY_TYPE_META.Both;
+              const meta = CATEGORY_TYPE_META[c.type] ?? { label: c.type, className: "bg-sky-100 text-sky-700" };
               return (
                 <tr key={c.id} className={c.is_active === false ? "opacity-50" : ""}>
                   <td className="px-4 py-3">
