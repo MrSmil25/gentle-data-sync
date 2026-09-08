@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Users, Boxes, UserCheck, Building2, BriefcaseBusiness, Handshake, Coins } from "lucide-react";
+import { Users, Boxes, UserCheck, Building2, BriefcaseBusiness, Handshake, Coins, Landmark, Receipt } from "lucide-react";
 import { useDivisions, useMyProfile, useProfiles, isSupervisor } from "@/hooks/useProfile";
 import { fetchDeals } from "@/lib/deals";
+import { fetchDashboardFinance } from "@/lib/transactions";
 import { formatRupiah } from "@/lib/format";
 import { SupervisorOverview } from "@/components/assignments/SupervisorOverview";
 import { UrgentBanners } from "@/components/announcements/UrgentBanners";
@@ -23,10 +24,12 @@ function StatCard({
   label,
   value,
   icon: Icon,
+  valueClassName = "",
 }: {
   label: string;
   value: string | number;
   icon: React.ElementType;
+  valueClassName?: string;
 }) {
   return (
     <div className="rounded-2xl border bg-card p-5 shadow-sm">
@@ -36,7 +39,7 @@ function StatCard({
           <Icon className="size-4" />
         </span>
       </div>
-      <p className="mt-3 text-3xl font-bold tracking-tight">{value}</p>
+      <p className={`mt-3 text-3xl font-bold tracking-tight break-words ${valueClassName}`}>{value}</p>
     </div>
   );
 }
@@ -47,6 +50,7 @@ function DashboardPage() {
   const { data: divisions = [] } = useDivisions();
 
   const { data: deals = [] } = useQuery({ queryKey: ["deals"], queryFn: fetchDeals });
+  const { data: finance } = useQuery({ queryKey: ["dashboard-finance"], queryFn: fetchDashboardFinance });
 
   const activeDeals = deals.filter(
     (d) => d.stage !== "Deal" && d.stage !== "Rejected" && d.stage !== "Ghosted",
@@ -92,6 +96,19 @@ function DashboardPage() {
         />
         <StatCard label="Deal Aktif" value={activeDeals} icon={Handshake} />
         <StatCard label="Total Pipeline Value" value={formatRupiah(pipelineValue)} icon={Coins} />
+        <StatCard
+          label="Saldo Organisasi"
+          value={finance ? formatRupiah(finance.balance) : "…"}
+          icon={Landmark}
+          valueClassName={finance ? (finance.balance >= 0 ? "text-emerald-600" : "text-red-600") : ""}
+        />
+        <StatCard
+          label="Expense Bulan Ini"
+          value={finance ? formatRupiah(finance.monthExpense) : "…"}
+          icon={Receipt}
+          valueClassName="text-red-600"
+        />
+
       </section>
 
       {myDivision && (

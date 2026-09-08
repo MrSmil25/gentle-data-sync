@@ -23,15 +23,15 @@ import {
   Building2,
   KanbanSquare,
   FileSignature,
-
-
-
+  Receipt,
+  Tags,
 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { isBPH, isSupervisor, useMyProfile } from "@/hooks/useProfile";
 import { usePendingAssignmentCount } from "@/hooks/useAssignments";
 import { canApproveFunds } from "@/lib/fund-requests";
+import { canManageCategories } from "@/lib/transactions";
 import { fetchOrgSettings, resolveLogoUrl } from "@/lib/announcements";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
@@ -65,6 +65,8 @@ const navSections = [
     items: [
       { to: "/fund-requests", label: "Pengajuan Dana", icon: Wallet },
       { to: "/budgets", label: "Anggaran", icon: PiggyBank },
+      { to: "/transactions", label: "Feed Keuangan", icon: Receipt },
+      { to: "/admin/categories", label: "Kelola Kategori", icon: Tags, requires: "categoryAdmin" },
     ] as const,
   },
   {
@@ -109,6 +111,7 @@ function AppLayout() {
   const canManageOrg = isBPH(profile?.role);
   const canApprove = canApproveFunds(profile?.role);
   const supervisor = isSupervisor(profile?.role);
+  const categoryAdmin = canManageCategories(profile?.role);
   const pendingAssignments = usePendingAssignmentCount();
 
   async function handleLogout() {
@@ -153,6 +156,7 @@ function AppLayout() {
                 {section.label}
               </p>
               {section.items.map((item) => (
+                ("requires" in item && item.requires === "categoryAdmin" && !categoryAdmin) ? null :
                 <Link
                   key={item.to}
                   to={item.to}
